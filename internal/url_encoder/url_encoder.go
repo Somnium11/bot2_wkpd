@@ -1,11 +1,11 @@
-package main
+package urlencoder
 
 import (
     "net/url"
 )
 
 //Конвертируем запрос для использование в качестве части URL
-func urlEncoded(str string) (string, error) {
+func UrlEncoded(str string) (string, error) {
     u, err := url.Parse(str)
     if err != nil {
         return "", err

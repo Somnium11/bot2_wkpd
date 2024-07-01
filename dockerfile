@@ -1,7 +1,5 @@
-FROM alpine
-ENV LANGUAGE="en"
-COPY /code/code .
-RUN apk add --no-cache ca-certificates &&\
-    chmod +x code
-EXPOSE 80/tcp
-CMD [ "./code" ]
+# Build Stage
+FROM golang:alpine AS builder
+WORKDIR /app
+COPY . .
+RUN go build -o ./app/main ./app/main.go

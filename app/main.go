@@ -6,9 +6,13 @@ import (
     "os"
     "reflect"
     "time"
+
+     "wkpd/internal/db"
+     "wkpd/internal/url_encoder"
+     "wkpd/internal/wikipedia_api"
 )
 
-func telegramBot() {
+func TelegramBot() {
 
     //Создаем бота
     bot, err := tgbotapi.NewBotAPI(os.Getenv("TOKEN"))
@@ -43,7 +47,7 @@ func telegramBot() {
                 if os.Getenv("DB_SWITCH") == "on" {
 
                     //Присваиваем количество пользоватьелей использовавших бота в num переменную
-                    num, err := getNumberOfUsers()
+                    num, err := db.GetNumberOfUsers()
                     if err != nil {
 
                         //Отправлем сообщение
@@ -69,18 +73,18 @@ func telegramBot() {
                 language := os.Getenv("LANGUAGE")
 
                 //Создаем url для поиска
-                ms, _ := urlEncoded(update.Message.Text)
+                ms, _ := urlencoder.UrlEncoded(update.Message.Text)
 
                 url := ms
                 request := "https://" + language + ".wikipedia.org/w/api.php?action=opensearch&search=" + url + "&limit=3&origin=*&format=json"
 
                 //Присваем данные среза с ответом в переменную message
-                message := wikipediaAPI(request)
+                message := wikipediaapi.WikipediaAPI(request)
 
                 if os.Getenv("DB_SWITCH") == "on" {
 
                     //Отправляем username, chat_id, message, answer в БД
-                    if err := collectData(update.Message.Chat.UserName, update.Message.Chat.ID, update.Message.Text, message); err != nil {
+                    if err := db.CollectData(update.Message.Chat.UserName, update.Message.Chat.ID, update.Message.Text, message); err != nil {
 
                         //Отправлем сообщение
                         msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Database error, but bot still working.")
@@ -114,7 +118,7 @@ func main() {
 
         if os.Getenv("DB_SWITCH") == "on" {
 
-            if err := createTable(); err != nil {
+            if err := db.CreateTable(); err != nil {
 
                 panic(err)
             }
@@ -124,5 +128,5 @@ func main() {
     time.Sleep(1 * time.Minute)
 
     //Вызываем бота
-    telegramBot()
+    TelegramBot()
 }

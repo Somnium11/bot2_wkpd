@@ -1,4 +1,4 @@
-package main
+package db
 
 import (
     "database/sql"
@@ -18,7 +18,7 @@ var sslmode = os.Getenv("SSLMODE")
 var dbInfo = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", host, port, user, password, dbname, sslmode)
 
 //Собираем данные полученные ботом
-func collectData(username string, chatid int64, message string, answer []string) error {
+func CollectData(username string, chatid int64, message string, answer []string) error {
 
     //Подключаемся к БД
     db, err := sql.Open("postgres", dbInfo)
@@ -42,7 +42,7 @@ func collectData(username string, chatid int64, message string, answer []string)
 }
 
 //Создаем таблицу users в БД при подключении к ней
-func createTable() error {
+func CreateTable() error {
 
     //Подключаемся к БД
     db, err := sql.Open("postgres", dbInfo)
@@ -59,7 +59,7 @@ func createTable() error {
     return nil
 }
 
-func getNumberOfUsers() (int64, error) {
+func GetNumberOfUsers() (int64, error) {
 
     var count int64
 

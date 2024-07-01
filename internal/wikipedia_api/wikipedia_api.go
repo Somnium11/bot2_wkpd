@@ -1,4 +1,4 @@
-package main
+package wikipediaapi
 
 import (
     "encoding/json"
@@ -33,7 +33,7 @@ func (sr *SearchResults) UnmarshalJSON(bs []byte) error {
     return nil
 }
 
-func wikipediaAPI(request string) (answer []string) {
+func WikipediaAPI(request string) (answer []string) {
 
     //Создаем срез на 3 элемента
     s := make([]string, 3)
